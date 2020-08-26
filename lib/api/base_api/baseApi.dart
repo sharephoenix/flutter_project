@@ -4,12 +4,16 @@ import 'dart:convert';
 import 'dart:io';
 
 class BaseApi {
-  final baseUrl = "https://www.fastmock.site/mock/93204edebb034ad9478eb047a19177a0/getLoginCode";
-
-  Future<String> postRequest({String path = "/api/sendCode", Map<String, String> headers}) async {
+//  final baseUrl = "https://www.fastmock.site/mock/93204edebb034ad9478eb047a19177a0/getLoginCode";
+//  final baseUrl = "http://localhost:30009";
+  final baseUrl = "http://localhost:9090";
+  Future<String> postRequest({String path = "/api/sendCode", dynamic body, Map<String, String> headers}) async {
     final url = '$baseUrl${path}';
     print(url);
-    var response = await http.post(url, body: 'name=doodle&color=blue');
+    var response = await http.post(url,
+      headers: headers,
+      body: convert.jsonEncode(body),
+     );
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       print('$jsonResponse');

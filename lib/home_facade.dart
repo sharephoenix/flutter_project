@@ -1,7 +1,11 @@
 
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/api/base_api/baseApi.dart';
+import 'package:flutter_project/controllers/homeController/homeVC.dart';
+import 'package:flutter_project/user_manager/user_manager.dart';
 
 class FacadePage extends StatefulWidget {
 
@@ -15,38 +19,29 @@ class FacadePage extends StatefulWidget {
 }
 
 class _FacadePage extends State<FacadePage> {
-  int _counter = 0;
 
   _changeCounter() {
-    setState(() {
-      _counter++;
+    Timer.periodic(Duration(seconds: 2), (timer) {
+      if (UserManager.getInstance().isLogin()) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
+          return HomeVC(title: "this is my title!!");
+        }));
+      }
     });
-    _postRequest();
-  }
-
-  _postRequest() async {
-    final api = BaseApi();
-    var response = await api.postRequest();
-    print("******");
-    print(response);
   }
 
   @override
   Widget build(BuildContext context) {
+
+    _changeCounter();
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title + '$_counter'),
-      ),
       body: Center(
-        child: Column(
-          children: <Widget>[
-            Text("this is test"),
-            RaisedButton(
-              onPressed: () => {
-                _changeCounter()
-              },
-            )
-          ],
+        child:RaisedButton(
+          child: Text("这里是广告界面"),
+          onPressed: () => {
+            _changeCounter()
+          },
         )
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/api/base_api/user_api.dart';
 import 'package:flutter_project/data_tool/data_tool.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -8,19 +9,19 @@ class RegisterVC extends StatefulWidget {
 }
 
 class _RegisterVC extends State<RegisterVC> {
-  String _mobile;
-  String _email;
-  String _nickname;
-  String _avatarUrl;
-  String _address;
-  int _age;
+  String _mobile = "18817322817";
+  String _email = "550709871@qq.com";
+  String _nickname = "touch";
+  String _avatarUrl = "http://";
+  String _address = "anhui";
+  int _age = 99;
 
-  _register() {
-    if (_mobile.isEmpty || !DataTool.isChinaPhoneLegal(_mobile)) {
+  _register() async {
+    if (_mobile == null || _mobile.isEmpty || !DataTool.isChinaPhoneLegal(_mobile)) {
       _showToast("请输出合法手机号码!!!");
       return;
     }
-    if (_email.isEmpty || !DataTool.isEmailLegal(_email)) {
+    if (_email == null || _email.isEmpty || !DataTool.isEmailLegal(_email)) {
       _showToast("请输入合法邮箱!!!");
       return;
     }
@@ -47,6 +48,10 @@ class _RegisterVC extends State<RegisterVC> {
     print(_address);
     print(_address);
     print(_age);
+
+    var response = await UserApi.getInstance().registerUser(nickname: _nickname, email: _email, address: _address, avatar: _avatarUrl, age: _age, mobile: _mobile);
+    print("registerCallback");
+    print('$response');
   }
 
   _showToast(String msg) {
@@ -55,7 +60,7 @@ class _RegisterVC extends State<RegisterVC> {
         msg: msg,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
-        backgroundColor: Color.fromARGB(1, 1, 1, 1),
+        backgroundColor: Colors.black,
         textColor: Colors.white);
   }
 
@@ -72,6 +77,9 @@ class _RegisterVC extends State<RegisterVC> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("手机号:"),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 200,
@@ -92,6 +100,9 @@ class _RegisterVC extends State<RegisterVC> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("邮箱:"),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 200,
@@ -112,6 +123,9 @@ class _RegisterVC extends State<RegisterVC> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("昵称:"),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 200,
@@ -132,6 +146,9 @@ class _RegisterVC extends State<RegisterVC> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("头像Url:"),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 200,
@@ -152,6 +169,9 @@ class _RegisterVC extends State<RegisterVC> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("地址:"),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 200,
@@ -172,6 +192,9 @@ class _RegisterVC extends State<RegisterVC> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("年龄:"),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 200,
