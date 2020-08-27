@@ -15,7 +15,7 @@ class UserManager {
     return loginModel != null;
   }
 
-  _initilize() async {
+  initialize() async {
     if (loginInfoJson != null) {
       var loginInfo = convert.jsonDecode(loginInfoJson) as Map<String, dynamic>;
       if (loginInfo != null) {
@@ -38,7 +38,14 @@ class UserManager {
     loginInfoJson = json;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("loginUser", json);
-    _initilize();
+    await initialize();
+  }
+
+  clearLoginInfo() async {
+    loginInfoJson = null;
+    loginModel = null;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("loginUser", null);
   }
 
   UserManager._();
@@ -46,7 +53,7 @@ class UserManager {
   static UserManager getInstance() {
     if (_instance == null) {
       _instance = UserManager._();
-      _instance._initilize();
+//      _instance.initialize();
     }
     return _instance;
   }

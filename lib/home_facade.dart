@@ -3,8 +3,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_project/api/base_api/baseApi.dart';
-import 'package:flutter_project/controllers/homeController/homeVC.dart';
+import 'package:flutter_project/controllers/loginController/login_vc.dart';
+import 'package:flutter_project/controllers/mainController/mainController.dart';
 import 'package:flutter_project/user_manager/user_manager.dart';
 
 class FacadePage extends StatefulWidget {
@@ -19,21 +19,31 @@ class FacadePage extends StatefulWidget {
 }
 
 class _FacadePage extends State<FacadePage> {
-
   _changeCounter() {
     Timer.periodic(Duration(seconds: 2), (timer) {
+      print("[timerrrrrr]");
       if (UserManager.getInstance().isLogin()) {
+        timer.cancel();
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) {
-          return HomeVC(title: "this is my title!!");
+          return MainVC();
         }));
+      } else {
+        timer.cancel();
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_){
+          return loginVC();
+        }), (route) => false);
       }
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-
+  void initState() {
+    super.initState();
     _changeCounter();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return Scaffold(
       body: Center(

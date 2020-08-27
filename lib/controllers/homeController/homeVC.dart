@@ -35,12 +35,12 @@ class _HomeVC extends State<HomeVC> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title + '$_counter'),
+        title: Text(widget.title + '_Home'),
       ),
       body: Center(
           child: Column(
             children: <Widget>[
-              Text("this is test"),
+              Text('this is my home of ${_counter}'),
               RaisedButton(
                 onPressed: () => {
                   _changeCounter()

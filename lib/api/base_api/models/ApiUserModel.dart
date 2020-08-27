@@ -11,6 +11,7 @@ class ApiUserModel {
   String email;
   String id;
   String mobile;
+  int age;
 }
 
 /// api interface data
@@ -27,6 +28,7 @@ class ApiLoginModel extends ApiUserModel {
     email = object["email"];
     id = object["id"];
     mobile = object["mobile"];
+    age = object["age"];
     accessToken = object["accessToken"];
   }
 }
@@ -34,16 +36,16 @@ class ApiLoginModel extends ApiUserModel {
 /// api interface
 class ApiLoginModelInterface extends ApiBaseModel {
   ApiLoginModel data;
+  String rawJson;
 
   ApiLoginModelInterface(String json) {
+    rawJson = json;
     var response = convert.jsonDecode(json);
     code = response["code"];
     msg = response["msg"];
     var currentData = response["data"] as Map<String, dynamic>;
     if (response["data"] != null) {
       data = ApiLoginModel(currentData);
-      /// 保存登陆信息
-      UserManager.getInstance().saveLoginInfo(currentData);
     }
   }
 }

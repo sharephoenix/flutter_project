@@ -6,6 +6,9 @@ class DataTool {
 
   // 验证邮箱是否合法
   static bool isEmailLegal(String str) {
+    if (str == null) {
+      return false;
+    }
     String p = r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$';
     RegExp regExp = new RegExp(p);
     return regExp.hasMatch(str);

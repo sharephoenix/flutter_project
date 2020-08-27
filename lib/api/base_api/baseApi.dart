@@ -6,7 +6,7 @@ import 'dart:io';
 class BaseApi {
 //  final baseUrl = "https://www.fastmock.site/mock/93204edebb034ad9478eb047a19177a0/getLoginCode";
 //  final baseUrl = "http://localhost:30009";
-  final baseUrl = "http://localhost:9090";
+  final baseUrl = "http://192.168.40.244:9090";
   Future<String> postRequest({String path = "/api/sendCode", dynamic body, Map<String, String> headers}) async {
     final url = '$baseUrl${path}';
     print(url);

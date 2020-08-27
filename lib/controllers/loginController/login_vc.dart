@@ -1,12 +1,16 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_project/api/base_api/models/ApiUserModel.dart';
 import 'package:flutter_project/api/base_api/user_api.dart';
 import 'package:flutter_project/controllers/homeController/homeVC.dart';
+import 'package:flutter_project/controllers/mainController/mainController.dart';
 import 'package:flutter_project/controllers/registerController/register_vc.dart';
-import 'package:flutter_project/home_facade.dart';
+import 'package:flutter_project/data_tool/data_tool.dart';
+import 'dart:convert' as convert;
+
 import 'package:flutter_project/user_manager/user_manager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class loginVC extends StatefulWidget {
 
@@ -16,6 +20,12 @@ class loginVC extends StatefulWidget {
 class _loginVC extends State<loginVC> {
   String _loginAccount;
   String _password;
+
+  @override
+  void initState() {
+    super.initState();
+
+  }
 
   _showRefresh() {
     if (UserManager.getInstance().isLogin()) {
@@ -31,24 +41,45 @@ class _loginVC extends State<loginVC> {
 
     var response = await UserApi.getInstance().loginFacade(mobile: _loginAccount, code: _password);
     print("[login_result]");
+    print(response.rawJson);
+    /// 保存登陆信息
+    var ss = convert.jsonDecode(response.rawJson);
+    var currentData = ss["data"] as Map<String, dynamic>;
+    print("[CurrentData]");
+    print(currentData);
+    await UserManager.getInstance().saveLoginInfo(currentData);
     print(UserManager.getInstance().isLogin());
     print(response.data.mobile);
     if (UserManager.getInstance().isLogin()) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) {
-        return HomeVC(title: "this is my title!!");
-      }));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) {
+        return MainVC();
+      }), (route) => false);
     }
   }
 
   // 发送登录验证码
-  _sendCode() {
-    UserApi.getInstance().sendLoginCode(mobile: _loginAccount);
+  _sendCode() async {
+    print("[sendCode]");
+    if (_loginAccount == null || !DataTool.isChinaPhoneLegal(_loginAccount)) {
+      _showToast("请输入正确的手机号码");
+      return;
+    }
   }
 
   _showRegisterVC() {
     Navigator.push(context, MaterialPageRoute(builder: (_) {
       return new RegisterVC();
     }));
+  }
+
+  _showToast(String msg) {
+    print('$msg');
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        backgroundColor: Colors.black,
+        textColor: Colors.white);
   }
 
   @override
@@ -66,7 +97,10 @@ class _loginVC extends State<loginVC> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Text("账号："),
+                Container(
+                  width: 60,
+                  child: Text("账号：", textAlign: TextAlign.center,),
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 200,
@@ -74,7 +108,6 @@ class _loginVC extends State<loginVC> {
                   ),
                   child: TextField(
                     textAlign: TextAlign.start,
-                    obscureText: false,
                     maxLines: 1,
                     onChanged: (text) {
                       _loginAccount = text;
@@ -84,6 +117,10 @@ class _loginVC extends State<loginVC> {
                       hintText: '请输入手机号码',
                     ),
                   ),
+                ),
+                Container(
+                  width: 22,
+                  height: 22,
                 )
               ],
             ),
@@ -93,7 +130,10 @@ class _loginVC extends State<loginVC> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("验证码："),
+                Container(
+                  width: 60,
+                  child: Text("验证码：", textAlign: TextAlign.center,),
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: 200,
@@ -110,9 +150,8 @@ class _loginVC extends State<loginVC> {
                   ),
                 ),
                 Container(
-
                   child: GestureDetector(
-                    child: Text("发送验证码"),
+                    child: Image.asset("images/send.png", width: 22, height: 22,),
                     onTap: _sendCode,
                   ),
                 )
@@ -148,16 +187,6 @@ class _loginVC extends State<loginVC> {
                     onPressed: _showRegisterVC,
                   ),
                 ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                      maxWidth: 200,
-                      maxHeight: 44
-                  ),
-                  child: RaisedButton(
-                    child: Text('Refresh'),
-                    onPressed: _showRefresh,
-                  ),
-                )
               ],
             )
           ],
